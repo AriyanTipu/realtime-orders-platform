@@ -40,7 +40,7 @@ fmt: ## Auto-format Python
 	docker compose run --rm core ruff format .
 
 bench: ## Benchmark C++ pick-path engine vs pure Python
-	docker compose run --rm core python /app/../native/bench_pickpath.py
+	docker compose run --rm core python /opt/bench_pickpath.py
 
 explain: ## Print EXPLAIN ANALYZE report for the top-sellers query
 	docker compose run --rm core python manage.py explain_report
