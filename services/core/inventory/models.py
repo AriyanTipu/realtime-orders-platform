@@ -33,9 +33,7 @@ class Stock(models.Model):
     variant = models.ForeignKey(
         ProductVariant, on_delete=models.CASCADE, related_name="stock_records"
     )
-    warehouse = models.ForeignKey(
-        Warehouse, on_delete=models.CASCADE, related_name="stock_records"
-    )
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name="stock_records")
     quantity = models.PositiveIntegerField(default=0)
     bin_x = models.PositiveSmallIntegerField()
     bin_y = models.PositiveSmallIntegerField()

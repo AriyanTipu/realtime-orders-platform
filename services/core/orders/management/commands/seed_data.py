@@ -30,11 +30,36 @@ WAREHOUSES = [
 ]
 
 PRODUCT_NOUNS = [
-    "Backpack", "Mug", "Hoodie", "Notebook", "Desk Lamp", "Water Bottle", "Keyboard",
-    "Mouse Mat", "Beanie", "T-Shirt", "Socks", "Umbrella", "Phone Stand", "Tote Bag",
-    "Cap", "Scarf", "Poster", "Sticker Pack", "Pen Set", "Travel Adapter", "Power Bank",
-    "Headphone Stand", "Coaster Set", "Laptop Sleeve", "Gym Towel", "Running Belt",
-    "Yoga Mat", "Puzzle", "Candle", "Plant Pot",
+    "Backpack",
+    "Mug",
+    "Hoodie",
+    "Notebook",
+    "Desk Lamp",
+    "Water Bottle",
+    "Keyboard",
+    "Mouse Mat",
+    "Beanie",
+    "T-Shirt",
+    "Socks",
+    "Umbrella",
+    "Phone Stand",
+    "Tote Bag",
+    "Cap",
+    "Scarf",
+    "Poster",
+    "Sticker Pack",
+    "Pen Set",
+    "Travel Adapter",
+    "Power Bank",
+    "Headphone Stand",
+    "Coaster Set",
+    "Laptop Sleeve",
+    "Gym Towel",
+    "Running Belt",
+    "Yoga Mat",
+    "Puzzle",
+    "Candle",
+    "Plant Pot",
 ]
 
 VARIANT_NAMES = ["Small", "Medium", "Large", "One Size", "Limited Edition"]
@@ -219,9 +244,7 @@ class Command(BaseCommand):
                 for variant, qty in order_lines
             ]
             OrderItem.objects.bulk_create(items, batch_size=BATCH_SIZE)
-            events = [
-                event for order in orders for event in self._events_for(rng, order)
-            ]
+            events = [event for order in orders for event in self._events_for(rng, order)]
             OrderStatusEvent.objects.bulk_create(events, batch_size=BATCH_SIZE)
 
             created += batch
@@ -244,7 +267,9 @@ class Command(BaseCommand):
             choices = [OrderStatus.SHIPPED] * 2 + [OrderStatus.DELIVERED] * 3
         else:
             choices = (
-                [OrderStatus.DELIVERED] * 87 + [OrderStatus.CANCELLED] * 8 + [OrderStatus.SHIPPED] * 5
+                [OrderStatus.DELIVERED] * 87
+                + [OrderStatus.CANCELLED] * 8
+                + [OrderStatus.SHIPPED] * 5
             )
         return rng.choice(choices)
 

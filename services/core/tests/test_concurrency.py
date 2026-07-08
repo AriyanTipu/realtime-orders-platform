@@ -78,9 +78,7 @@ def test_concurrent_placements_never_oversell():
     stock = Stock.objects.get(variant=variant)
     assert stock.quantity == 0
     assert Order.objects.count() == 5
-    units_sold = sum(
-        OrderItem.objects.filter(variant=variant).values_list("quantity", flat=True)
-    )
+    units_sold = sum(OrderItem.objects.filter(variant=variant).values_list("quantity", flat=True))
     assert units_sold == 5
 
 

@@ -125,6 +125,4 @@ def test_invalid_input_rejected(user, warehouse, lines, message):
 
 def test_unknown_variant_rejected(user, warehouse):
     with pytest.raises(ValueError, match="unknown variant"):
-        place_order(
-            user=user, warehouse=warehouse, lines=[OrderLine(variant_id=99999, quantity=1)]
-        )
+        place_order(user=user, warehouse=warehouse, lines=[OrderLine(variant_id=99999, quantity=1)])

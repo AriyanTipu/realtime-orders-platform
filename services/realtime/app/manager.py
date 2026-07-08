@@ -7,11 +7,15 @@ newest-wins is the right loss policy) and the drop is counted for /healthz.
 """
 
 import asyncio
+import contextlib
 import json
 import logging
 from dataclasses import dataclass, field
+from typing import Any
 
 logger = logging.getLogger(__name__)
+
+Payload = dict[str, Any]
 
 
 @dataclass(eq=False)  # identity semantics: two clients are never "equal"
@@ -21,7 +25,7 @@ class Client:
     order_filter: str | None = None
     dropped: int = 0
 
-    def wants(self, payload: dict) -> bool:
+    def wants(self, payload: Payload) -> bool:
         if self.order_filter is None:
             return True
         return payload.get("type") == "order" and payload.get("order_id") == self.order_filter
@@ -48,7 +52,7 @@ class ConnectionManager:
     def total_dropped(self) -> int:
         return sum(client.dropped for client in self._clients)
 
-    def broadcast(self, payload: dict) -> None:
+    def broadcast(self, payload: Payload) -> None:
         message = json.dumps(payload)
         for client in self._clients:
             if not client.wants(payload):
@@ -56,13 +60,10 @@ class ConnectionManager:
             try:
                 client.queue.put_nowait(message)
             except asyncio.QueueFull:
-                try:
-                    client.queue.get_nowait()  # shed the oldest message
-                except asyncio.QueueEmpty:  # pragma: no cover - racing the sender
-                    pass
+                # Shed the oldest message; suppress the (sender-racing) empty case.
+                with contextlib.suppress(asyncio.QueueEmpty):
+                    client.queue.get_nowait()
                 client.queue.put_nowait(message)
                 client.dropped += 1
                 if client.dropped == 1 or client.dropped % 100 == 0:
-                    logger.warning(
-                        "slow websocket consumer: dropped %d message(s)", client.dropped
-                    )
+                    logger.warning("slow websocket consumer: dropped %d message(s)", client.dropped)

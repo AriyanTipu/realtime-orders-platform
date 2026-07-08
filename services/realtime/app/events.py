@@ -12,12 +12,13 @@ import contextlib
 import json
 import logging
 from collections.abc import Callable
+from typing import Any
 
 import asyncpg
 
 logger = logging.getLogger(__name__)
 
-OnEvent = Callable[[dict], None]
+OnEvent = Callable[[dict[str, Any]], None]
 
 _KEEPALIVE_SECONDS = 5.0
 

@@ -53,7 +53,7 @@ def test_top_sellers_ranks_per_warehouse_and_excludes_noise(sales_history):
     rows = top_sellers(hours=24, limit=5)
     by_warehouse: dict[str, list] = {}
     for row in rows:
-        by_warehouse.setdefault(row["warehouse"], []).append(row)
+        by_warehouse.setdefault(str(row["warehouse"]), []).append(row)
 
     ldn = by_warehouse["LDN"]
     assert [row["sales_rank"] for row in ldn] == [1, 2]

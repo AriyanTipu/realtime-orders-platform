@@ -81,19 +81,22 @@ class OrderItem(models.Model):
             models.CheckConstraint(condition=models.Q(quantity__gte=1), name="orderitem_qty_gte_1"),
         ]
 
+    def __str__(self) -> str:
+        return f"{self.quantity} x {self.variant.sku}"
+
     @property
     def line_total_pence(self) -> int:
         return self.quantity * self.unit_price_pence
-
-    def __str__(self) -> str:
-        return f"{self.quantity} x {self.variant.sku}"
 
 
 class OrderStatusEvent(models.Model):
     """Append-only audit trail; one row per transition, including creation."""
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="status_events")
-    from_status = models.CharField(
+    # NULL is semantically distinct from any status here: it marks the
+    # creation event ("there was no previous state"), so DJ001's empty-string
+    # convention would erase real meaning.
+    from_status = models.CharField(  # noqa: DJ001
         max_length=12, choices=OrderStatus.choices, null=True, blank=True
     )
     to_status = models.CharField(max_length=12, choices=OrderStatus.choices)

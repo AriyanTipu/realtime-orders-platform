@@ -4,7 +4,6 @@ from rest_framework.test import APIClient
 
 import pickpath
 from inventory.models import Stock
-from orders.models import OrderStatus
 from orders.services import OrderLine, place_order
 from tests.factories import make_stock, make_user, make_variant, make_warehouse
 

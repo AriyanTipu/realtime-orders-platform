@@ -14,7 +14,7 @@ import logging
 from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 from datetime import UTC, datetime
-from typing import Protocol
+from typing import Any, Protocol
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
@@ -31,10 +31,10 @@ class EventSource(Protocol):
     async def stop(self) -> None: ...
 
 
-SourceFactory = Callable[[Settings, Callable[[dict], None]], EventSource]
+SourceFactory = Callable[[Settings, Callable[[dict[str, Any]], None]], EventSource]
 
 
-def _postgres_source(settings: Settings, on_event: Callable[[dict], None]) -> EventSource:
+def _postgres_source(settings: Settings, on_event: Callable[[dict[str, Any]], None]) -> EventSource:
     from app.events import PostgresEventSource
 
     return PostgresEventSource(
