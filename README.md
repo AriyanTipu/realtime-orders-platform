@@ -251,4 +251,6 @@ University of London; MSc Data Science, King's College London (2026 entry).
 
 ## Licence
 
-[MIT](LICENSE)
+Copyright © 2026 Ariyan Mohammed Tipu. Released under the
+[MIT Licence](LICENSE); copyright arises automatically under the Copyright,
+Designs and Patents Act 1988 and no registration is required in the UK.

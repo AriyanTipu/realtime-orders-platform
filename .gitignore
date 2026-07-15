@@ -36,10 +36,9 @@ CMakeFiles/
 *.sqlite3
 pgdata/
 
-# IDE / OS noise
+# IDE, local tooling and OS noise
 .idea/
 .vscode/
 *.swp
 .DS_Store
 Thumbs.db
-
