@@ -1,6 +1,6 @@
 # Real-time Order & Inventory Operations Platform
 
-[![CI](https://github.com/OWNER/realtime-orders-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/realtime-orders-platform/actions/workflows/ci.yml)
+[![CI](https://github.com/AriyanTipu/realtime-orders-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/AriyanTipu/realtime-orders-platform/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![Django 5.2](https://img.shields.io/badge/Django-5.2-092E20?logo=django&logoColor=white)
@@ -130,7 +130,7 @@ reasoning: [docs/query-optimization.md](docs/query-optimization.md).
 ## Quickstart
 
 ```bash
-git clone https://github.com/OWNER/realtime-orders-platform.git
+git clone https://github.com/AriyanTipu/realtime-orders-platform.git
 cd realtime-orders-platform
 cp .env.example .env
 
@@ -225,7 +225,7 @@ stays open.
 **Ariyan Mohammed Tipu** — BSc Mathematics with Data Science, City,
 University of London; MSc Data Science, King's College London (2026–).
 
-📧 ariyantipu39@gmail.com · [GitHub](https://github.com/OWNER)
+📧 ariyantipu39@gmail.com · [GitHub](https://github.com/AriyanTipu)
 
 ## License
 

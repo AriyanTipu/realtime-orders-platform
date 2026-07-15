@@ -83,7 +83,7 @@ jobs:
       - name: Benchmark C++ vs Python engine
         run: |
           echo "## Pick-path engine benchmark" >> "$GITHUB_STEP_SUMMARY"
-          python native/bench_pickpath.py >> "$GITHUB_STEP_SUMMARY"
+          python native/bench_pickpath.py | tee -a "$GITHUB_STEP_SUMMARY"
 
   test-realtime:
     name: Realtime service (pytest + mypy, PostgreSQL)
