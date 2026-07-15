@@ -23,8 +23,6 @@ Plus a third, quieter one: a CPU-bound warehouse **pick-path optimiser
 written twice** — a pure-Python reference and a C++ (pybind11) engine proven
 behaviourally identical by an exact-parity test suite.
 
-<!-- SCREENSHOT -->
-
 ## Architecture
 
 ```mermaid
@@ -114,14 +112,20 @@ Reproduce with `make bench` (also printed in every CI run's job summary).
 "Top-selling products per warehouse in the last 24 hours" — three joins, a
 grouped aggregation and a per-warehouse `RANK()` window, supported by a
 **partial covering index** (`created_at WHERE status <> 'CANCELLED' INCLUDE
-warehouse_id`). The repo includes a management command that measures the
-plan with and without the index by dropping it inside a rolled-back
-transaction:
+(warehouse_id, id)`). The repo includes a management command that measures
+the plan with and without the index by dropping it inside a rolled-back
+transaction. Measured on 240k orders with a 24h window matching 0.09% of
+history:
 
-<!-- EXPLAIN-SUMMARY -->
+| Variant | Plan | Execution time |
+|---|---|---:|
+| With index | **Index Only Scan** (Heap Fetches: 0) → Nested Loop via FK index | **4.08 ms** |
+| Without index | Parallel Seq Scan over 240k rows | 104.98 ms (**25.7× slower**) |
 
-Full plans and the reasoning behind each indexing choice:
-[docs/query-optimization.md](docs/query-optimization.md).
+The doc tells the whole story, including the first index design that the
+planner rightly **ignored** (it didn't cover the join key) and the
+selectivity regime where a seq scan legitimately wins — full plans and
+reasoning: [docs/query-optimization.md](docs/query-optimization.md).
 
 ## Quickstart
 
