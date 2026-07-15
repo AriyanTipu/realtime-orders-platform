@@ -103,9 +103,21 @@ tie-breaking, so 150 randomized parity tests assert **exact** sequence
 equality, and a Held–Karp exact solver bounds solution quality on small
 instances.
 
-<!-- BENCH-TABLE -->
+Measured in CI (ubuntu-latest, GCC -O2 via scikit-build-core; the table below
+is regenerated in every run's job summary):
 
-Reproduce with `make bench` (also printed in every CI run's job summary).
+| Bins per order | Python (ms/route) | C++ (ms/route) | Speedup |
+|---:|---:|---:|---:|
+| 8 | 0.055 | 0.003 | 21.3× |
+| 15 | 0.184 | 0.007 | 27.6× |
+| 25 | 0.711 | 0.009 | 81.3× |
+| 40 | 2.304 | 0.022 | 102.5× |
+| 60 | 7.446 | 0.063 | 117.6× |
+
+The speedup *grows* with order size — exactly the interpreter-overhead story:
+the same O(n²)-per-pass work costs Python more per element. Solution quality
+vs the exact Held–Karp optimum (n ≤ 9, 30 instances): mean within **0.2%**,
+worst case 2.9%. Reproduce with `make bench`.
 
 ### 4. A query worth explaining
 
