@@ -24,6 +24,8 @@ optimiser, written twice on purpose. A pure-Python reference implementation
 and a C++ (pybind11) engine are proven behaviourally identical by an
 exact-parity test suite.
 
+![Live operations dashboard: order feed, stock levels and statuses updating over the WebSocket](docs/images/dashboard.png)
+
 ## Architecture
 
 ```mermaid
