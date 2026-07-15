@@ -24,7 +24,7 @@ def place_random_order(rng: random.Random | None = None) -> Order | None:
     """Place an order for 1-3 random in-stock variants from one warehouse.
 
     Returns None when nothing is sellable. May raise InsufficientStock if it
-    races another buyer — callers decide whether to resample.
+    races another buyer; callers decide whether to resample.
     """
     rng = rng or random.Random()
     pool = list(

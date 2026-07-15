@@ -14,7 +14,7 @@ function shortId(orderId: string): string {
   <section class="panel" aria-label="Live orders">
     <h2>Live orders</h2>
     <p v-if="store.orders.length === 0" class="muted">
-      Waiting for orders — run <code>manage.py demo_orders</code> or press "Simulate order".
+      Waiting for orders. Run <code>manage.py demo_orders</code> or press "Simulate order".
     </p>
     <table v-else>
       <thead>

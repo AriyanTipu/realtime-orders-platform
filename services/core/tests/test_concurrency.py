@@ -8,7 +8,7 @@ assert the invariants that row-level locking is supposed to protect:
 2. pk-ordered lock acquisition prevents lock-ordering deadlocks;
 3. units are conserved when placements race cancellations.
 
-They are skipped on SQLite because SQLite's SELECT FOR UPDATE is a no-op —
+They are skipped on SQLite because SQLite's SELECT FOR UPDATE is a no-op;
 passing there would prove nothing.
 """
 
@@ -56,7 +56,7 @@ def run_in_threads(workers: list) -> list:
 def test_concurrent_placements_never_oversell():
     """Eight buyers race for five units: exactly five succeed, stock ends at
     zero, and it never goes negative. This is the race that SELECT FOR UPDATE
-    exists to prevent — without it, several buyers read quantity=5
+    exists to prevent; without it, several buyers read quantity=5
     simultaneously and all decrement."""
     warehouse = make_warehouse()
     variant = make_variant(sku="HOT-1")

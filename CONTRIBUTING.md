@@ -39,6 +39,9 @@ LISTEN/NOTIFY) and skip themselves on SQLite rather than pass vacuously.
   hooks.
 - TypeScript: strict `vue-tsc`; keep components presentational and state in
   the Pinia store.
+- Language: prose, comments and docs use British English. Code identifiers
+  keep ecosystem spellings (Django's `serializers`, `optimize_route`) so
+  they stay consistent with the APIs they touch.
 - Commits: conventional style (`feat:`, `fix:`, `ci:`, `docs:` ...), present
   tense, body explains the *why*.
 

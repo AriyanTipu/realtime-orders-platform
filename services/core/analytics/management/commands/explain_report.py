@@ -9,10 +9,10 @@ Methodology matters here:
   variants are measured against warm caches rather than whichever ran first
   paying the cold-start cost.
 - PostgreSQL DDL is transactional, so the "without index" measurement drops
-  the index inside a transaction that is rolled back — the live schema is
+  the index inside a transaction that is rolled back; the live schema is
   never actually changed and both variants see identical data.
 
-Output is markdown-ready for docs/query-optimization.md.
+Output is markdown-ready for docs/query-optimisation.md.
 """
 
 import re

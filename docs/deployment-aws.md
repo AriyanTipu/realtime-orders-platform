@@ -6,11 +6,12 @@ performs the rollout below the moment secrets are configured. Nothing in this
 document is required to run or evaluate the project locally.
 
 > **Cost warning (deliberate design constraint):** the project runs at £0
-> using local Docker + GitHub's free tiers. Following this runbook creates
+> using local Docker and GitHub's free tiers. Following this runbook creates
 > AWS resources that are free for 12 months on a new account's free tier
-> (750 h/month of t3.micro or t2.micro depending on region) and then cost
-> roughly **$8–11/month**. Elastic IPs, S3 storage and egress can add small
-> charges even inside the free year. Set a billing alarm before you start.
+> (750 hours/month of t3.micro or t2.micro depending on region) and then
+> cost roughly **8 to 11 USD per month**. Elastic IPs, S3 storage and egress
+> can add small charges even inside the free year. Set a billing alarm
+> before you start.
 
 ## 1. One-time AWS setup
 

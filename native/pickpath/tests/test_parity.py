@@ -1,5 +1,5 @@
 """Engine parity: the C++ implementation must be behaviourally identical to
-the pure-Python reference — same sequences, same distances, on the same
+the pure-Python reference: same sequences, same distances, on the same
 inputs. Both engines are deterministic by construction (identical
 tie-breaking), which is what makes exact equality assertable."""
 

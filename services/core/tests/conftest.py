@@ -9,7 +9,7 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     anything, so they are skipped instead."""
     if connection.vendor == "postgresql":
         return
-    skip = pytest.mark.skip(reason="requires PostgreSQL — run via docker compose or CI")
+    skip = pytest.mark.skip(reason="requires PostgreSQL; run via docker compose or CI")
     for item in items:
         if "integration" in item.keywords:
             item.add_marker(skip)

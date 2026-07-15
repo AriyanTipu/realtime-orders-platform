@@ -3,8 +3,8 @@ import type { OrderStatus } from "../types";
 
 defineProps<{ status: OrderStatus }>();
 
-// Terminal states wear reserved status colors; the in-progress ladder wears a
-// validated ordinal blue ramp (identity is carried by the text, never color alone).
+// Terminal states wear reserved status colours; the in-progress ladder wears a
+// validated ordinal blue ramp (identity is carried by the text, never colour alone).
 const DOT: Record<OrderStatus, string> = {
   PENDING: "var(--status-warning)",
   CONFIRMED: "var(--ordinal-1)",

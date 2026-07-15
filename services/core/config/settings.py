@@ -73,7 +73,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # USE_SQLITE=1 gives a zero-dependency mode for quick local unit runs; tests
 # that rely on PostgreSQL semantics (row locks, LISTEN/NOTIFY) skip themselves
-# on this backend — see tests/conftest.py.
+# on this backend; see tests/conftest.py.
 if env_bool("USE_SQLITE"):
     DATABASES = {
         "default": {

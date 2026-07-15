@@ -26,7 +26,7 @@ class Stock(models.Model):
     transaction that changes `quantity` must first take SELECT ... FOR UPDATE
     on the row (see orders.services), which is what makes concurrent
     decrements safe. `quantity` is a PositiveIntegerField, so PostgreSQL also
-    enforces quantity >= 0 as a CHECK constraint — a last line of defence if
+    enforces quantity >= 0 as a CHECK constraint, a last line of defence if
     a future code path skips the lock.
     """
 

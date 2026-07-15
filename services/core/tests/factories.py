@@ -1,4 +1,4 @@
-"""Minimal hand-rolled builders — enough structure for tests without a
+"""Minimal hand-rolled builders: enough structure for tests without a
 factory framework dependency."""
 
 from django.contrib.auth.models import User

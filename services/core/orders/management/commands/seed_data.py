@@ -1,7 +1,7 @@
 """Seed a realistic demo dataset: catalogue, warehouses, stock and a month of
 backdated order history.
 
-History is bulk-inserted rather than routed through the service layer — these
+History is bulk-inserted rather than routed through the service layer; these
 are *past* orders whose stock movements have already washed through, so
 replaying them against current stock would be both slow and wrong. Live
 traffic (demo_orders, the API) always uses the real service layer.
@@ -88,7 +88,7 @@ class Command(BaseCommand):
             "--recency-skew",
             type=float,
             default=1.6,
-            help="Exponent skewing order history toward recent days (1.0 = uniform)",
+            help="Exponent skewing order history towards recent days (1.0 = uniform)",
         )
         parser.add_argument("--seed", type=int, default=42)
         parser.add_argument(
@@ -224,9 +224,9 @@ class Command(BaseCommand):
             lines: list[list[tuple[ProductVariant, int]]] = []
             for _ in range(batch):
                 warehouse = rng.choice(warehouses)
-                # The exponent skews history toward recent days (default 1.6)
-                # so the 24h analytics window has plenty to chew on; 1.0 gives
-                # a uniform spread for low-selectivity benchmarking.
+                # The exponent skews history towards recent days (default 1.6)
+                # so the 24h analytics window has plenty of data; 1.0 gives a
+                # uniform spread for low-selectivity benchmarking.
                 age_seconds = (rng.random() ** recency_skew) * days * 86400
                 created_at = now - timedelta(seconds=age_seconds)
                 variants = rng.sample(

@@ -8,18 +8,18 @@ const store = useDashboardStore();
 const view = computed(() => {
   switch (store.connection) {
     case "online":
-      return { label: "Live", color: "var(--status-good)" };
+      return { label: "Live", colour: "var(--status-good)" };
     case "connecting":
-      return { label: "Connecting…", color: "var(--status-warning)" };
+      return { label: "Connecting…", colour: "var(--status-warning)" };
     default:
-      return { label: "Reconnecting…", color: "var(--status-critical)" };
+      return { label: "Reconnecting…", colour: "var(--status-critical)" };
   }
 });
 </script>
 
 <template>
   <span class="badge" role="status">
-    <span class="dot" :style="{ background: view.color }" aria-hidden="true"></span>
+    <span class="dot" :style="{ background: view.colour }" aria-hidden="true"></span>
     {{ view.label }}
     <span v-if="store.eventsSeen > 0" class="muted">· {{ store.eventsSeen }} events</span>
   </span>

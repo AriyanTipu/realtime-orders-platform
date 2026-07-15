@@ -2,10 +2,11 @@
 
 Design note: pg_notify is called on the *same connection, inside the same
 transaction* as the data change. PostgreSQL queues the notification and
-delivers it only if the transaction commits — so subscribers can never observe
+delivers it only if the transaction commits, so subscribers can never observe
 an event for a rolled-back order, and there is no dual-write race like the one
 you accept when publishing to an external broker after commit.
-See docs/adr/0002-postgres-listen-notify.md for the trade-offs vs Redis pub/sub.
+See docs/adr/0002-postgres-listen-notify-for-events.md for the trade-offs
+against Redis pub/sub.
 """
 
 import json

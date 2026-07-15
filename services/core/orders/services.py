@@ -7,7 +7,7 @@ follow the same locking protocol:
   Any two transactions needing overlapping rows acquire locks in the same
   global order, which makes lock-ordering deadlocks impossible.
 - Status transitions first lock the Order row, then (for cancellations) stock
-  rows — a strict order → stock hierarchy, never the reverse.
+  rows: a strict order-then-stock hierarchy, never the reverse.
 
 The concurrency tests in tests/test_concurrency.py exercise this protocol with
 genuinely simultaneous transactions.
@@ -137,7 +137,7 @@ def advance_order(order: Order | int, to_status: str, note: str = "") -> Order:
     """Apply one lifecycle transition; cancelling restocks the items.
 
     The Order row is locked first so concurrent transitions on the same order
-    serialize — without this, two racing CONFIRM requests would both read
+    serialise; without this, two racing CONFIRM requests would both read
     PENDING and both "succeed".
     """
     order_pk = order.pk if isinstance(order, Order) else order

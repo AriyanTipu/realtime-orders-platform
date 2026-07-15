@@ -48,7 +48,7 @@ onBeforeUnmount(() => {
 <template>
   <header>
     <div>
-      <h1>Realtime Orders — Operations Dashboard</h1>
+      <h1>Realtime Orders - Operations Dashboard</h1>
       <p class="muted sub">Django core · FastAPI realtime · Postgres LISTEN/NOTIFY · C++ pick-path</p>
     </div>
     <div class="actions">

@@ -28,7 +28,7 @@ class FakeEventSource:
         self.stopped = True
 
     def emit(self, payload: dict) -> None:
-        """Deliver an event from the test thread onto the app's event loop —
+        """Deliver an event from the test thread onto the app's event loop,
         the same marshalling a real NOTIFY callback gets from asyncpg."""
         assert self._loop is not None, "emit() before lifespan startup"
         self._loop.call_soon_threadsafe(self._on_event, payload)
@@ -78,7 +78,7 @@ def test_order_socket_only_sees_its_own_order(fake_app):
         sources[0].emit({"type": "stock", "warehouse": "LDN", "changes": []})
         sources[0].emit({"type": "order", "order_id": "abc", "status": "SHIPPED"})
 
-        # The first frame through must already be the matching order — the
+        # The first frame through must already be the matching order; the
         # mismatched order and the stock event were filtered out.
         message = ws.receive_json()
         assert (message["order_id"], message["status"]) == ("abc", "SHIPPED")

@@ -47,7 +47,7 @@ def test_two_opt_never_worse_than_greedy_construction(unique_bins):
 def test_heuristic_against_exact_oracle(unique_bins):
     """Held-Karp gives the true optimum for small instances. The heuristic can
     never beat it (sanity) and, over this fixed-seed suite, stays within 5% of
-    it on average (quality). Deterministic — no flakiness."""
+    it on average (quality). Deterministic, so never flaky."""
     rng = random.Random(7)
     ratios = []
     for _ in range(40):

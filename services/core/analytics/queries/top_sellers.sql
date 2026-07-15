@@ -1,11 +1,11 @@
 -- Top-selling products per warehouse over a time window.
 -- Parameters (positional): [0] window start timestamp, [1] top-N cutoff.
 --
--- Index support: order_active_created_idx — a partial index on
--- orders_order(created_at) WHERE status <> 'CANCELLED', INCLUDE (warehouse_id)
--- — lets the planner resolve the WHERE clause and the warehouse grouping key
--- without touching the orders heap. See docs/query-optimization.md for the
--- measured EXPLAIN ANALYZE plans with and without it.
+-- Index support: order_active_created_idx, a partial index on
+-- orders_order(created_at) WHERE status <> 'CANCELLED', INCLUDE (warehouse_id, id),
+-- lets the planner serve the time/status filter, the warehouse grouping key
+-- and the join key without touching the orders heap. See
+-- docs/query-optimisation.md for the measured EXPLAIN ANALYZE plans.
 WITH per_product AS (
     SELECT
         o.warehouse_id,

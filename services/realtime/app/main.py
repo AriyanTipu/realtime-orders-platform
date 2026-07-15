@@ -1,8 +1,8 @@
 """FastAPI realtime gateway.
 
 Why a separate async service instead of doing WebSockets in Django: the core
-service is synchronous WSGI — one worker per in-flight request — which is the
-wrong shape for thousands of mostly-idle, long-lived connections. This
+service is synchronous WSGI, one worker per in-flight request, which is the
+wrong shape for thousands of mostly idle, long-lived connections. This
 process holds them all on a single event loop and needs nothing but a LISTEN
 connection to Postgres; it does no queries and keeps no state, so it can be
 scaled horizontally behind a load balancer without coordination.

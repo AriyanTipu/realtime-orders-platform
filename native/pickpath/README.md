@@ -9,8 +9,8 @@ instances used as a test oracle.
 
 Two interchangeable engines:
 
-- `pickpath` (this package) — pure-Python reference implementation, runs anywhere.
-- `pickpath-native` (sibling directory) — the same algorithm in C++ via pybind11,
+- `pickpath` (this package): the pure-Python reference implementation, runs anywhere.
+- `pickpath-native` (sibling directory): the same algorithm in C++ via pybind11,
   releasing the GIL during optimisation. Installed automatically in the Docker
   image and CI; `pickpath.optimize_route` picks it up when present.
 

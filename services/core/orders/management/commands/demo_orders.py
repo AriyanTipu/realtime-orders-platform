@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
     def handle(self, *args: Any, **options: Any) -> None:
         if not ProductVariant.objects.exists():
-            raise CommandError("No catalogue found — run `manage.py seed_data` first.")
+            raise CommandError("No catalogue found. Run `manage.py seed_data` first.")
 
         rng = random.Random(options["seed"])
         rounds = 0

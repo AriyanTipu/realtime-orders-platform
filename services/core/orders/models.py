@@ -51,10 +51,10 @@ class Order(models.Model):
         ordering = ["-created_at"]
         indexes = [
             # Serves the analytics window ("recent, non-cancelled orders").
-            # INCLUDE must carry every column the query touches — warehouse_id
-            # (its GROUP BY key) *and* id (its join key) — or the planner
-            # cannot use an index-only scan and rightly falls back to a seq
-            # scan; measured proof in docs/query-optimization.md.
+            # INCLUDE must carry every column the query touches, meaning
+            # warehouse_id (its GROUP BY key) and id (its join key), or the
+            # planner cannot use an index-only scan and rightly falls back to
+            # a seq scan; measured proof in docs/query-optimisation.md.
             models.Index(
                 fields=["created_at"],
                 name="order_active_created_idx",

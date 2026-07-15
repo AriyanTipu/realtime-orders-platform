@@ -37,7 +37,7 @@ function barWidth(quantity: number): string {
       </label>
     </div>
 
-    <p v-if="visible.length === 0" class="muted">No stock rows yet — seed the database.</p>
+    <p v-if="visible.length === 0" class="muted">No stock rows yet. Seed the database first.</p>
     <ul v-else class="rows">
       <li
         v-for="row in visible"

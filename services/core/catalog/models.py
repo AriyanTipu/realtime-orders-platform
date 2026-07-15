@@ -16,7 +16,7 @@ class Product(models.Model):
 
 
 class ProductVariant(models.Model):
-    """A sellable unit (SKU). Prices are integer pence — never floats near money."""
+    """A sellable unit (SKU). Prices are integer pence; never floats near money."""
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="variants")
     sku = models.CharField(max_length=32, unique=True)
