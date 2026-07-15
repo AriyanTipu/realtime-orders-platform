@@ -31,10 +31,12 @@ services:
     build:
       context: .
       dockerfile: services/core/Dockerfile
+      target: dev
     env_file: .env
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./services/core:/app
+      - ./native:/native:ro # parity tests + benchmarks against the built engine
     ports:
       - "8000:8000"
     depends_on:
@@ -47,6 +49,7 @@ services:
     build:
       context: .
       dockerfile: services/realtime/Dockerfile
+      target: dev
     env_file: .env
     command: uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
     volumes:
