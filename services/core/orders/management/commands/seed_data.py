@@ -84,6 +84,12 @@ class Command(BaseCommand):
         parser.add_argument("--users", type=int, default=40)
         parser.add_argument("--orders", type=int, default=6000)
         parser.add_argument("--days", type=int, default=30)
+        parser.add_argument(
+            "--recency-skew",
+            type=float,
+            default=1.6,
+            help="Exponent skewing order history toward recent days (1.0 = uniform)",
+        )
         parser.add_argument("--seed", type=int, default=42)
         parser.add_argument(
             "--flush", action="store_true", help="Delete previously seeded data first"
@@ -106,7 +112,13 @@ class Command(BaseCommand):
         variants = self._create_catalog(rng, fake, options["products"])
         stocks = self._create_stock(rng, warehouses, variants)
         order_count = self._create_order_history(
-            rng, users, warehouses, stocks, options["orders"], options["days"]
+            rng,
+            users,
+            warehouses,
+            stocks,
+            options["orders"],
+            options["days"],
+            options["recency_skew"],
         )
 
         self.stdout.write(
@@ -198,6 +210,7 @@ class Command(BaseCommand):
         stocks: list[Stock],
         order_count: int,
         days: int,
+        recency_skew: float,
     ) -> int:
         pool_by_warehouse: dict[int, list[ProductVariant]] = {}
         for stock in stocks:
@@ -211,9 +224,10 @@ class Command(BaseCommand):
             lines: list[list[tuple[ProductVariant, int]]] = []
             for _ in range(batch):
                 warehouse = rng.choice(warehouses)
-                # rng.random()**1.6 skews history toward recent days so the
-                # 24h analytics window has plenty to chew on.
-                age_seconds = (rng.random() ** 1.6) * days * 86400
+                # The exponent skews history toward recent days (default 1.6)
+                # so the 24h analytics window has plenty to chew on; 1.0 gives
+                # a uniform spread for low-selectivity benchmarking.
+                age_seconds = (rng.random() ** recency_skew) * days * 86400
                 created_at = now - timedelta(seconds=age_seconds)
                 variants = rng.sample(
                     pool_by_warehouse[warehouse.id],

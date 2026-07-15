@@ -50,13 +50,16 @@ class Order(models.Model):
     class Meta:
         ordering = ["-created_at"]
         indexes = [
-            # Serves the analytics window ("recent, non-cancelled orders") —
-            # see analytics/queries/top_sellers.sql and docs/query-optimization.md.
+            # Serves the analytics window ("recent, non-cancelled orders").
+            # INCLUDE must carry every column the query touches — warehouse_id
+            # (its GROUP BY key) *and* id (its join key) — or the planner
+            # cannot use an index-only scan and rightly falls back to a seq
+            # scan; measured proof in docs/query-optimization.md.
             models.Index(
                 fields=["created_at"],
                 name="order_active_created_idx",
                 condition=~models.Q(status="CANCELLED"),
-                include=["warehouse"],
+                include=["warehouse", "id"],
             ),
             models.Index(fields=["status"], name="order_status_idx"),
         ]
