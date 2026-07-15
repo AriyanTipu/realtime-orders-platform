@@ -1,6 +1,6 @@
 # Deployment to a single EC2 instance over SSH, plus an optional S3 sync of
 # the built frontend. Deliberately dormant: it does nothing (and costs
-# nothing) until the repository secrets below are configured — see
+# nothing) until the repository secrets below are configured. See
 # docs/deployment-aws.md for the full runbook and cost notes.
 #
 # Required secrets to activate:   EC2_HOST, EC2_USER, EC2_SSH_KEY
@@ -27,12 +27,12 @@ jobs:
         run: |
           if [ -z "$EC2_HOST" ]; then
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Deployment is dormant — add EC2_HOST, EC2_USER and EC2_SSH_KEY secrets to activate (docs/deployment-aws.md)."
+            echo "::notice::Deployment is dormant: add EC2_HOST, EC2_USER and EC2_SSH_KEY secrets to activate (docs/deployment-aws.md)."
           else
             echo "configured=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: steps.check.outputs.configured == 'true'
 
       - name: Install SSH key
