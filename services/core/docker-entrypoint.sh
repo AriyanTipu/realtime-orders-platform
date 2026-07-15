@@ -1,14 +1,22 @@
 #!/bin/sh
 set -e
 
-# Wait for PostgreSQL (skipped in USE_SQLITE mode), then migrate unless the
-# deployment runs migrations as an explicit step (MIGRATE_ON_START=0).
+# Wait for PostgreSQL, then migrate under a cluster-wide advisory lock so
+# concurrent container starts (for example `compose up` racing a
+# `compose run` one-off) cannot run migrations against the same database at
+# the same time. Deployments that migrate as an explicit release step can
+# set MIGRATE_ON_START=0.
 python - <<'PY'
 import os
+import subprocess
 import sys
 import time
 
+MIGRATE = os.environ.get("MIGRATE_ON_START", "1") == "1"
+
 if os.environ.get("USE_SQLITE", "0") == "1":
+    if MIGRATE:
+        subprocess.run([sys.executable, "manage.py", "migrate", "--no-input"], check=True)
     sys.exit(0)
 
 import psycopg
@@ -23,17 +31,27 @@ dsn = (
 deadline = time.monotonic() + 60
 while True:
     try:
-        psycopg.connect(dsn, connect_timeout=3).close()
+        connection = psycopg.connect(dsn, connect_timeout=3, autocommit=True)
         break
     except Exception as exc:
         if time.monotonic() > deadline:
             print(f"database never became ready: {exc}", file=sys.stderr)
             sys.exit(1)
         time.sleep(1)
-PY
 
-if [ "${MIGRATE_ON_START:-1}" = "1" ]; then
-    python manage.py migrate --no-input
-fi
+try:
+    if MIGRATE:
+        # Session-level lock: held until released or the session ends, so a
+        # crashed migration cannot leave the lock stuck.
+        connection.execute("SELECT pg_advisory_lock(715001)")
+        try:
+            subprocess.run(
+                [sys.executable, "manage.py", "migrate", "--no-input"], check=True
+            )
+        finally:
+            connection.execute("SELECT pg_advisory_unlock(715001)")
+finally:
+    connection.close()
+PY
 
 exec "$@"

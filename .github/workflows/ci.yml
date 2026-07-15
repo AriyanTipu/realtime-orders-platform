@@ -154,8 +154,6 @@ jobs:
         run: |
           cp .env.example .env
           docker compose up -d --build db redis core realtime
-      - name: Seed demo data
-        run: docker compose run --rm core python manage.py seed_data
       - name: Wait for both services to report healthy
         run: |
           for attempt in $(seq 1 45); do
@@ -170,6 +168,8 @@ jobs:
           echo "services never became healthy"
           docker compose logs --tail 100
           exit 1
+      - name: Seed demo data
+        run: docker compose run --rm core python manage.py seed_data
       - name: Live smoke test (REST order out of the WebSocket)
         run: |
           pip install httpx websockets
