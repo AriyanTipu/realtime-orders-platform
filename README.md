@@ -103,7 +103,7 @@ Pick-path optimisation (nearest-neighbour plus 2-opt over the warehouse
 grid's Manhattan metric) is a pure-CPU loop on the request path, quadratic
 per pass. The C++ engine releases the GIL while it runs; the pure-Python
 twin keeps every environment working. Both are deterministic with identical
-tie-breaking, so 150 randomised parity tests assert exact sequence
+tie-breaking, so a 150-case randomised parity suite asserts exact sequence
 equality, and a Held-Karp exact solver bounds solution quality on small
 instances.
 
