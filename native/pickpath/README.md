@@ -4,7 +4,7 @@ Warehouse pick-path optimisation for order batching: given the bin locations of
 an order's items, find a short route depot → all bins → depot under the
 Manhattan (aisle-walking) metric. This is a travelling-salesman variant, so the
 package uses a deterministic nearest-neighbour construction followed by
-first-improvement 2-opt refinement, plus a Held–Karp exact solver for small
+first-improvement 2-opt refinement, plus a Held-Karp exact solver for small
 instances used as a test oracle.
 
 Two interchangeable engines:
