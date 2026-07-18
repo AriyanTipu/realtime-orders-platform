@@ -8,8 +8,8 @@
 ![Vue 3](https://img.shields.io/badge/Vue_3-TypeScript-4FC08D?logo=vuedotjs&logoColor=white)
 ![C++17](https://img.shields.io/badge/C%2B%2B17-pybind11-00599C?logo=cplusplus&logoColor=white)
 
-A small e-commerce backend built around the two problems that toy CRUD
-tutorials skip:
+A small e-commerce backend that concentrates on two hard parts of order
+handling and one performance problem underneath them:
 
 1. **Concurrency correctness.** Many orders decrement the same stock at
    once. This platform makes that safe with `SELECT ... FOR UPDATE` row
@@ -107,18 +107,22 @@ tie-breaking, so a 150-case randomised parity suite asserts exact sequence
 equality, and a Held-Karp exact solver bounds solution quality on small
 instances.
 
-Measured in CI (ubuntu-latest, GCC -O2 via scikit-build-core; the table
-below is regenerated in every run's job summary):
+One representative CI run (ubuntu-latest, GCC -O2 via scikit-build-core).
+These are microbenchmarks on a shared runner, so the absolute timings and
+the exact multipliers move by 10-20% from run to run; the table is
+regenerated in every run's job summary, and `make bench` prints your own:
 
 | Bins per order | Python (ms/route) | C++ (ms/route) | Speedup |
 |---:|---:|---:|---:|
-| 8 | 0.055 | 0.003 | 21.3x |
-| 15 | 0.184 | 0.007 | 27.6x |
-| 25 | 0.711 | 0.009 | 81.3x |
-| 40 | 2.304 | 0.022 | 102.5x |
-| 60 | 7.446 | 0.063 | 117.6x |
+| 8 | 0.055 | 0.003 | ~20x |
+| 15 | 0.184 | 0.007 | ~30x |
+| 25 | 0.711 | 0.009 | ~80x |
+| 40 | 2.304 | 0.022 | ~100x |
+| 60 | 7.446 | 0.063 | ~115x |
 
-The speedup grows with order size, which is exactly what removing
+The stable, reproducible finding is the shape, not any single figure: the
+speedup grows with order size, from tens of times at small orders to
+around two orders of magnitude at the largest, which is what removing
 interpreter overhead from a quadratic loop should look like. Solution
 quality against the exact Held-Karp optimum (n <= 9, 30 instances): mean
 within 0.2%, worst case 2.9%. Reproduce with `make bench`.
@@ -192,6 +196,35 @@ without meaning anything on SQLite.
 
 CI runs all of it on every push, including compiling the C++ engine and
 running the concurrency tests against a real PostgreSQL service container.
+
+## Trade-offs and limitations
+
+The guarantees here are deliberately scoped, and it is worth being clear
+about where they stop.
+
+- **`LISTEN/NOTIFY` is transactional but not durable.** Because the
+  notification is emitted with `pg_notify` inside the committing
+  transaction, a subscriber can never see an event for work that rolled
+  back. It does not, however, survive a subscriber being offline: if the
+  realtime service is down at the moment `NOTIFY` fires, that message is
+  gone. The dashboard is a live view, not an event log, and it re-reads
+  current state on reconnect, so state self-heals but individual transient
+  events can be missed. At-least-once delivery would need a transactional
+  outbox table that a worker replays, or logical replication; both are
+  deliberately out of scope here.
+- **"No oversell" holds for writers that go through the order service.**
+  Safety comes from every writer taking the same row locks in primary-key
+  order; `lock_timeout` bounds how long a contended request waits rather
+  than letting it hang. Code that bypasses the service, or takes the same
+  rows in a different order, could still deadlock or race. This is
+  correctness under contention on one PostgreSQL primary, not a
+  distributed lock.
+- **Fan-out is single-process.** One realtime gateway holds the
+  `LISTEN` connection and broadcasts to its own clients. Running several
+  gateway instances would need each to listen independently (fine, since
+  `NOTIFY` is delivered to every listener) with a shared slow-consumer
+  policy; horizontal scaling of the socket tier is designed for but not
+  built.
 
 ## Project structure
 
